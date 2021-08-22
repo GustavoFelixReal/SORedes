@@ -9,14 +9,14 @@ public class Principal {
 	public static void main(String[] args) {
 		RedesController redes = new RedesController();
 		
-		//int option = JOptionPane.showInputDialog(null, "Escolha uma opÃ§Ã£o: \n  1 - Usar");
 		int option = 0;
 		
 		do {
 			try {
-				option = Integer.parseInt(JOptionPane.showInputDialog(null, "Escolha uma opÃ§Ã£o: \n 1 - Consultar IPv4 \n 2 - Consultar ping mÃ©dio \n 0 - Sair"));
+				option = Integer.parseInt(JOptionPane.showInputDialog(null, "Escolha uma opção: \n 1 - Consultar IPv4 \n 2 - Consultar ping médio \n 0 - Sair"));
 			} catch (Exception error) {
-				JOptionPane.showMessageDialog(null, "Obrigado pela preferÃªncia");
+				JOptionPane.showMessageDialog(null, "Obrigado pela preferência");
+				break;
 			}
 			
 			switch (option) {
@@ -27,10 +27,10 @@ public class Principal {
 					redes.getPing();
 					break;
 				case 0: 
-					JOptionPane.showMessageDialog(null, "Obrigado pela preferÃªncia");
+					JOptionPane.showMessageDialog(null, "Obrigado pela preferência");
 					break;
 				default:
-					JOptionPane.showMessageDialog(null, "OpÃ§Ã£o invÃ¡lida");
+					JOptionPane.showMessageDialog(null, "Opção inválida");
 			} 
 			
 		} while (option != 0);

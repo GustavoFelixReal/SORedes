@@ -137,9 +137,9 @@ public class RedesController {
 		String pingMedio = "";
 		StringBuffer ping = new StringBuffer();
 		
-		if (linha.contains("M,dia")) {
+		if (linha.contains("dia")) {
 			pingMedio = linha.split(",")[2].split("=")[1];
-			ping.append("Ping MÃ©dio: " + pingMedio);
+			ping.append("Ping Médio: " + pingMedio);
 		}
 		
 		return ping.toString();
@@ -151,7 +151,7 @@ public class RedesController {
 		
 		if (linha.contains("avg")) {
 			pingMedio = linha.split("=")[1].split("/")[1];
-			ping.append("Ping MÃ©dio: " + pingMedio + "ms");
+			ping.append("Ping Médio: " + pingMedio + "ms");
 		}
 		
 		return ping.toString();
