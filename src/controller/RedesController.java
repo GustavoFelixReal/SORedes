@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import javax.swing.JOptionPane;
+
 public class RedesController {
 
 	public RedesController() {
@@ -27,12 +29,13 @@ public class RedesController {
 			InputStreamReader leitor = new InputStreamReader(fluxo);
 			BufferedReader buffer = new BufferedReader(leitor);
 			String linha = buffer.readLine();
+			StringBuffer ip = new StringBuffer();
 
 			while (linha != null) {
 				if (os.contains("Windows")) {
-					ipWindows(linha);
+					ip.append(ipWindows(linha));
 				} else {
-					ipLinux(linha);
+					ip.append(ipLinux(linha));
 				}
 
 				linha = buffer.readLine();
@@ -41,6 +44,8 @@ public class RedesController {
 			buffer.close();
 			leitor.close();
 			fluxo.close();
+			
+			JOptionPane.showMessageDialog(null, ip);
 		} catch (IOException error) {
 			error.printStackTrace();
 		}
@@ -48,9 +53,11 @@ public class RedesController {
 
 	public void getPing() {
 		try {
+			JOptionPane.showMessageDialog(null, "Aguarde", null, JOptionPane.INFORMATION_MESSAGE);
+
 			String os = os();
-			String process = os.contains("Windows") ? "PING -4 -n 10 www.google.com.br"
-					: "PING -4 -c 10 www.google.com.br";
+			String process = os.contains("Windows") ? "ping -4 -n 10 www.google.com.br"
+					: "ping -4 -c 10 www.google.com.br";
 			Process p;
 
 			if (os.contains("Windows")) {
@@ -63,14 +70,13 @@ public class RedesController {
 			InputStreamReader leitor = new InputStreamReader(fluxo);
 			BufferedReader buffer = new BufferedReader(leitor);
 			String linha = buffer.readLine();
+			StringBuffer ping = new StringBuffer();
 
 			while (linha != null) {
-				
-				System.out.println(linha);
 				if (os.contains("Windows")) {
-					pingWindows(linha);
+					ping.append(pingWindows(linha));
 				} else {
-					pingLinux(linha);
+					ping.append(pingLinux(linha));
 				}
 
 				linha = buffer.readLine();
@@ -79,6 +85,8 @@ public class RedesController {
 			buffer.close();
 			leitor.close();
 			fluxo.close();
+			
+			JOptionPane.showMessageDialog(null, ping);
 		} catch (IOException error) {
 			error.printStackTrace();
 		}
@@ -88,52 +96,64 @@ public class RedesController {
 		return System.getProperty("os.name");
 	}
 
-	private void ipWindows(String linha) {
+	private String ipWindows(String linha) {
 		String adapterName = "";
 		String adapterIPv4 = "";
+		StringBuffer ip = new StringBuffer();
 
 		if (linha.contains("Ethernet")) {
 			adapterName = linha.split("Adaptador Ethernet")[1].split(":")[0];
-			System.out.println("Nome do adaptador: " + adapterName);
+			ip.append("Nome do adaptador: " + adapterName + "\n");
 		}
 
 		if (linha.contains("IPv4")) {
 			adapterIPv4 = linha.split(":")[1];
-			System.out.println("IPv4 do adaptador: " + adapterIPv4 + "\n");
+			ip.append("IPv4 do adaptador: " + adapterIPv4 + "\n");
 		}
+		
+		return ip.toString();
 	}
 
-	private void ipLinux(String linha) {
+	private String ipLinux(String linha) {
 		String adapterName = "";
 		String adapterIPv4 = "";
+		StringBuffer ip = new StringBuffer();
 
 		if (linha.contains("flags")) {
 			adapterName = linha.split(":")[0];
-			System.out.println("Nome do adaptador: " + adapterName);
+			ip.append("Nome do adaptador: " + adapterName + "\n");
 		}
 
 		if (linha.contains("inet ")) {
 			adapterIPv4 = linha.split("inet")[1].split("netmask")[0].split(" ")[1];
-			System.out.println("IPv4 do adaptador: " + adapterIPv4 + "\n");
+			ip.append("IPv4 do adaptador: " + adapterIPv4 + "\n");
+			ip.append("\n");
 		}
+		
+		return ip.toString();
 	}
 
-	private void pingWindows(String linha) {
+	private String pingWindows(String linha) {
 		String pingMedio = "";
+		StringBuffer ping = new StringBuffer();
 		
-		if (linha.contains("M‚dia")) {
+		if (linha.contains("M,dia")) {
 			pingMedio = linha.split(",")[2].split("=")[1];
-			System.out.println("Ping Médio: " + pingMedio);
+			ping.append("Ping MÃ©dio: " + pingMedio);
 		}
-
+		
+		return ping.toString();
 	}
 
-	private void pingLinux(String linha) {
+	private String pingLinux(String linha) {
 		String pingMedio = "";
+		StringBuffer ping = new StringBuffer();
 		
-		if (linha.contains("M‚dia")) {
-			pingMedio = linha.split(",")[2].split("=")[1];
-			System.out.println("Ping Médio: " + pingMedio);
+		if (linha.contains("avg")) {
+			pingMedio = linha.split("=")[1].split("/")[1];
+			ping.append("Ping MÃ©dio: " + pingMedio + "ms");
 		}
+		
+		return ping.toString();
 	}
 }
