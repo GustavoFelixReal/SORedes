@@ -7,10 +7,9 @@ public class Principal {
 	public static void main(String[] args) {
 		RedesController redes = new RedesController();
 		
-		String os = redes.getOs();
+		String ip = redes.getIp();
 		
-		System.out.println(os);
+		System.out.println(ip);
 
 	}
-
 }
