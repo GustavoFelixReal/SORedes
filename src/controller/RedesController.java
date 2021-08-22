@@ -15,19 +15,17 @@ public class RedesController {
 		return System.getProperty("os.name");
 	}
 	
-	public String getIp() {
+	public void getIp() {
 		String os = os();
 		String process = "";
 		
 		if (os.contains("Windows")) {
 			process = "ipconfig";
 		} else {
-			process = "ifconfig| grep -A 1 'eth0'|tail -1|cut -d ':' -f 2|cut -d ' ' -f 1";
+			process = "ifconfig";
 		}
 		
 		readProcess(process, os);
-		
-		return process;
 	}
 	
 	
@@ -46,15 +44,12 @@ public class RedesController {
 			BufferedReader buffer = new BufferedReader(leitor);
 			String linha = buffer.readLine();
 			
-			System.out.println(linha);
-			
 			while (linha != null) {
 				if (os.contains("Windows")) {
 					ipWindows(linha);
 				} else {
 					ipLinux(linha);
 				}
-				
 				
 				linha = buffer.readLine();
 			}
@@ -88,15 +83,13 @@ public class RedesController {
 		String adapterName = "";
 		String adapterIPv4 = "";
 		
-		System.out.println(linha);
-		
-		if (linha.contains("Ethernet")) {
-			adapterName = linha.split("Adaptador Ethernet")[1].split(":")[0];
+		if (linha.contains("flags")) {
+			adapterName = linha.split(":")[0];
 			System.out.println("Nome do adaptador: " + adapterName);
 		}
 		
-		if (linha.contains("IPv4")) {
-			adapterIPv4 = linha.split(":")[1];
+		if (linha.contains("inet ")) {
+			adapterIPv4 = linha.split("inet")[1].split("netmask")[0].split(" ")[1];
 			System.out.println("IPv4 do adaptador: " + adapterIPv4 + "\n");
 		}
 	}
