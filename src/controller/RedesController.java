@@ -22,7 +22,7 @@ public class RedesController {
 		if (os.contains("Windows")) {
 			process = "ipconfig";
 		} else {
-			process = "ifconfig";
+			process = "ifconfig| grep -A 1 'eth0'|tail -1|cut -d ':' -f 2|cut -d ' ' -f 1";
 		}
 		
 		readProcess(process, os);
@@ -33,17 +33,26 @@ public class RedesController {
 	
 	public void readProcess(String process, String os) {
 		try {
-			Process p = Runtime.getRuntime().exec(process);
+			Process p;
+			
+			if (os.contains("Windows")) {
+				p = Runtime.getRuntime().exec(process);
+			} else {
+				p = Runtime.getRuntime().exec(new String[]{ "/bin/bash", "-c", process });
+			}
+			
 			InputStream fluxo = p.getInputStream();
 			InputStreamReader leitor = new InputStreamReader(fluxo);
 			BufferedReader buffer = new BufferedReader(leitor);
 			String linha = buffer.readLine();
 			
+			System.out.println(linha);
+			
 			while (linha != null) {
 				if (os.contains("Windows")) {
 					ipWindows(linha);
 				} else {
-					//ipLinux(linha);
+					ipLinux(linha);
 				}
 				
 				
@@ -78,6 +87,8 @@ public class RedesController {
 	public void ipLinux(String linha) {
 		String adapterName = "";
 		String adapterIPv4 = "";
+		
+		System.out.println(linha);
 		
 		if (linha.contains("Ethernet")) {
 			adapterName = linha.split("Adaptador Ethernet")[1].split(":")[0];
